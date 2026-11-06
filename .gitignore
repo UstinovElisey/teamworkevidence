@@ -36,3 +36,13 @@ coverage
 
 # Temp
 *.tsbuildinfo
+
+# env
+.env
+.env.local
+.env.*.local
+
+# НЕ игнорировать mockServiceWorker.js — он нужен для MSW
+!public/mockServiceWorker.js
+
+py.py
