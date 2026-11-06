@@ -1,47 +1,41 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { NButton, NResult } from 'naive-ui'
-import { useRouter } from 'vue-router'
+import { NButton, NText } from 'naive-ui'
 
 const { t } = useI18n()
-const router = useRouter()
 </script>
 
 <template>
   <div class="not-found">
-    <NResult
-      status="404"
-      :title="'404'"
-      :description="t('common.notFound')"
-    >
-      <template #footer>
-        <NButton
-          type="primary"
-          class="not-found__btn"
-          @click="router.push('/')"
-        >
-          ← {{ t('common.backHome') }}
-        </NButton>
-      </template>
-    </NResult>
+    <NText class="not-found__code">404</NText>
+    <NText depth="3" class="not-found__message">
+      {{ t('errors.notFound') }}
+    </NText>
+    <RouterLink to="/">
+      <NButton type="primary" size="medium" style="margin-top: 16px">
+        &#8592; {{ t('nav.dashboard') }}
+      </NButton>
+    </RouterLink>
   </div>
 </template>
 
 <style scoped>
 .not-found {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: 60vh;
+  gap: 8px;
+  padding: 48px 24px;
 }
 
-.not-found__btn {
-  background-color: var(--accent) !important;
-  border-color: var(--accent) !important;
+.not-found__code {
+  font-size: 64px;
+  font-weight: 700;
+  color: var(--tw-border);
 }
 
-.not-found__btn:hover {
-  background-color: var(--accent-hover) !important;
-  border-color: var(--accent-hover) !important;
+.not-found__message {
+  font-size: 18px;
+  color: var(--tw-text);
 }
 </style>

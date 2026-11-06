@@ -1,81 +1,60 @@
 {
   "app": {
-    "title": "TeamWork Evidence",
-    "loading": "Загрузка...",
-    "error": "Ошибка",
-    "notFound": "Страница не найдена",
-    "backToHome": "Вернуться на главную",
     "name": "TeamWork Evidence"
   },
   "nav": {
-    "home": "Главная",
-    "projects": "Проекты",
-    "hackathons": "Хакатоны",
-    "profile": "Профиль",
-    "dashboard": "Дашборд",
-    "marketplace": "Маркетплейс",
-    "settings": "Настройки",
-    "teams": "Команды"
-  },
-  "theme": {
-    "toggle": "Переключить тему",
-    "light": "Светлая",
-    "dark": "Тёмная"
-  },
-  "language": {
-    "toggle": "Сменить язык",
-    "ru": "Русский",
-    "en": "English"
+    "dashboard": "Панель управления",
+    "reports": "Отчёты",
+    "team": "Команда",
+    "settings": "Настройки"
   },
   "auth": {
-    "login": "Вход",
-    "register": "Регистрация",
-    "logout": "Выйти",
+    "loginTitle": "Вход",
+    "registerTitle": "Регистрация",
     "email": "Email",
+    "emailPlaceholder": "you@example.com",
     "password": "Пароль",
-    "confirmPassword": "Подтверждение пароля",
+    "passwordPlaceholder": "Минимум 8 символов",
+    "passwordConfirm": "Подтверждение пароля",
+    "passwordConfirmPlaceholder": "Повторите пароль",
     "role": "Роль",
-    "roles": {
-      "developer": "Разработчик",
-      "employer": "Работодатель",
-      "organizer": "Организатор",
-      "customer": "Заказчик"
-    },
     "loginButton": "Войти",
     "registerButton": "Зарегистрироваться",
     "noAccount": "Нет аккаунта?",
     "hasAccount": "Уже есть аккаунт?",
     "goToRegister": "Зарегистрироваться",
     "goToLogin": "Войти",
-    "loginSuccess": "Вход выполнен успешно",
-    "registerSuccess": "Регистрация успешна",
+    "logout": "Выйти",
     "errorInvalidCredentials": "Неверный email или пароль",
-    "errorUserExists": "Пользователь с таким email уже существует",
-    "errorUserNotFound": "Пользователь не найден",
-    "errorGeneric": "Произошла ошибка. Попробуйте позже.",
-    "validation": {
-      "required": "Обязательное поле",
-      "invalidEmail": "Некорректный email",
-      "minLength8": "Минимум 8 символов",
-      "passwordMismatch": "Пароли не совпадают"
+    "errorEmailTaken": "Этот email уже зарегистрирован",
+    "errorRegisterFailed": "Ошибка регистрации. Попробуйте позже.",
+    "errorServerUnavailable": "Сервер недоступен. Попробуйте позже.",
+    "sessionExpired": "Сессия истекла. Войдите снова.",
+    "unauthorized": "Нет доступа",
+    "roles": {
+      "developer": "Разработчик",
+      "teamlead": "Тимлид",
+      "manager": "Менеджер",
+      "admin": "Администратор"
     },
-    "oauthGithub": "Войти через GitHub"
+    "validation": {
+      "emailRequired": "Введите email",
+      "emailInvalid": "Неверный формат email",
+      "passwordRequired": "Введите пароль",
+      "passwordMinLength": "Минимум {min} символов",
+      "passwordConfirmRequired": "Подтвердите пароль",
+      "passwordsMismatch": "Пароли не совпадают",
+      "roleRequired": "Выберите роль"
+    }
   },
   "common": {
-    "todo": "В разработке",
-    "save": "Сохранить",
-    "cancel": "Отмена",
-    "delete": "Удалить",
-    "edit": "Редактировать",
-    "create": "Создать",
-    "search": "Поиск",
     "loading": "Загрузка...",
-    "empty": "Пусто",
-    "confirm": "Подтвердить",
-    "yes": "Да",
-    "no": "Нет",
-    "close": "Закрыть",
-    "back": "Назад",
-    "next": "Далее"
+    "welcome": "Добро пожаловать",
+    "comingSoon": "Раздел скоро появится",
+    "underDevelopment": "Раздел в разработке",
+    "underDevelopmentHint": "Этот раздел будет реализован в следующих задачах."
+  },
+  "errors": {
+    "notFound": "Страница не найдена"
   }
 }

@@ -9,7 +9,7 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
     <div class="main-layout__body">
       <AppSidebar />
       <main class="main-layout__content">
-        <RouterView />
+        <slot />
       </main>
     </div>
   </div>
@@ -19,20 +19,23 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
 .main-layout {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  background-color: var(--tw-bg-base);
 }
 
 .main-layout__body {
   display: flex;
   flex: 1;
-  overflow: hidden;
+  min-height: 0;
+  position: relative;
 }
 
 .main-layout__content {
   flex: 1;
+  padding: 0;
   overflow-y: auto;
-  padding: 24px 32px;
-  background-color: var(--bg-main);
+  background-color: var(--tw-bg-base);
+  position: relative;
+  z-index: 0;
 }
 </style>

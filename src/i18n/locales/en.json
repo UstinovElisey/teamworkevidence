@@ -1,81 +1,60 @@
 {
   "app": {
-    "title": "TeamWork Evidence",
-    "loading": "Loading...",
-    "error": "Error",
-    "notFound": "Page not found",
-    "backToHome": "Back to Home",
     "name": "TeamWork Evidence"
   },
   "nav": {
-    "home": "Home",
-    "projects": "Projects",
-    "hackathons": "Hackathons",
-    "profile": "Profile",
     "dashboard": "Dashboard",
-    "marketplace": "Marketplace",
-    "settings": "Settings",
-    "teams": "Teams"
-  },
-  "theme": {
-    "toggle": "Toggle theme",
-    "light": "Light",
-    "dark": "Dark"
-  },
-  "language": {
-    "toggle": "Change language",
-    "ru": "Русский",
-    "en": "English"
+    "reports": "Reports",
+    "team": "Team",
+    "settings": "Settings"
   },
   "auth": {
-    "login": "Sign In",
-    "register": "Sign Up",
-    "logout": "Sign Out",
+    "loginTitle": "Sign In",
+    "registerTitle": "Sign Up",
     "email": "Email",
+    "emailPlaceholder": "you@example.com",
     "password": "Password",
-    "confirmPassword": "Confirm Password",
+    "passwordPlaceholder": "At least 8 characters",
+    "passwordConfirm": "Confirm password",
+    "passwordConfirmPlaceholder": "Repeat password",
     "role": "Role",
-    "roles": {
-      "developer": "Developer",
-      "employer": "Employer",
-      "organizer": "Organizer",
-      "customer": "Customer"
-    },
     "loginButton": "Sign In",
     "registerButton": "Sign Up",
     "noAccount": "Don't have an account?",
     "hasAccount": "Already have an account?",
     "goToRegister": "Sign Up",
     "goToLogin": "Sign In",
-    "loginSuccess": "Successfully signed in",
-    "registerSuccess": "Registration successful",
+    "logout": "Sign Out",
     "errorInvalidCredentials": "Invalid email or password",
-    "errorUserExists": "A user with this email already exists",
-    "errorUserNotFound": "User not found",
-    "errorGeneric": "An error occurred. Please try again later.",
-    "validation": {
-      "required": "This field is required",
-      "invalidEmail": "Invalid email address",
-      "minLength8": "Minimum 8 characters",
-      "passwordMismatch": "Passwords do not match"
+    "errorEmailTaken": "This email is already registered",
+    "errorRegisterFailed": "Registration failed. Please try again later.",
+    "errorServerUnavailable": "Server unavailable. Please try again later.",
+    "sessionExpired": "Session expired. Please sign in again.",
+    "unauthorized": "Access denied",
+    "roles": {
+      "developer": "Developer",
+      "teamlead": "Team Lead",
+      "manager": "Manager",
+      "admin": "Administrator"
     },
-    "oauthGithub": "Sign in with GitHub"
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email format",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "At least {min} characters",
+      "passwordConfirmRequired": "Please confirm your password",
+      "passwordsMismatch": "Passwords do not match",
+      "roleRequired": "Please select a role"
+    }
   },
   "common": {
-    "todo": "Coming soon",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "create": "Create",
-    "search": "Search",
     "loading": "Loading...",
-    "empty": "Empty",
-    "confirm": "Confirm",
-    "yes": "Yes",
-    "no": "No",
-    "close": "Close",
-    "back": "Back",
-    "next": "Next"
+    "welcome": "Welcome",
+    "comingSoon": "Section coming soon",
+    "underDevelopment": "Section under development",
+    "underDevelopmentHint": "This section will be implemented in the following tasks."
+  },
+  "errors": {
+    "notFound": "Page not found"
   }
 }

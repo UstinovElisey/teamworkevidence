@@ -1,232 +1,168 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { useForm, useField } from 'vee-validate'
-import { toTypedSchema } from '@vee-validate/zod'
-import { z } from 'zod'
 import {
   NForm,
   NFormItem,
   NInput,
   NButton,
   NAlert,
-  NSpace,
   NSelect,
+  type FormRules,
+  type FormInst,
 } from 'naive-ui'
-import { AxiosError } from 'axios'
-import { authApi } from '@/services/authApi'
-import { tokenStorage } from '@/services/tokenStorage'
-import type { AuthErrorPayload, UserRole } from '@/types/auth'
+import { useAuthStore } from '@/stores/authStore'
+import type { UserRole } from '@/types/auth'
 
 const { t } = useI18n()
 const router = useRouter()
+const authStore = useAuthStore()
 
-const serverError = ref('')
+const formRef = ref<FormInst | null>(null)
 const isSubmitting = ref(false)
+const serverError = ref('')
 
-const roleOptions = computed(() => {
-  const roles: UserRole[] = ['developer', 'employer', 'organizer', 'customer']
-  return roles.map((r) => ({
-    label: t(`auth.roles.${r}`),
-    value: r,
-  }))
+const model = reactive({
+  email: '',
+  password: '',
+  passwordConfirmation: '',
+  role: 'developer' as UserRole,
 })
 
-const validationSchema = computed(() =>
-  toTypedSchema(
-    z
-      .object({
-        email: z
-          .string()
-          .min(1, t('auth.validation.required'))
-          .email(t('auth.validation.invalidEmail')),
-        password: z
-          .string()
-          .min(1, t('auth.validation.required'))
-          .min(8, t('auth.validation.minLength8')),
-        confirmPassword: z
-          .string()
-          .min(1, t('auth.validation.required')),
-        role: z.enum(
-          ['developer', 'employer', 'organizer', 'customer'] as const,
-          { message: t('auth.validation.required') },
-        ),
-      })
-      .refine((data) => data.password === data.confirmPassword, {
-        message: t('auth.validation.passwordMismatch'),
-        path: ['confirmPassword'],
-      }),
-  ),
-)
+const roleOptions = computed(() => [
+  { label: t('auth.roles.developer'), value: 'developer' },
+  { label: t('auth.roles.teamlead'), value: 'teamlead' },
+  { label: t('auth.roles.manager'), value: 'manager' },
+  { label: t('auth.roles.admin'), value: 'admin' },
+])
 
-const { handleSubmit, errors } = useForm({
-  validationSchema,
-})
+const rules = computed<FormRules>(() => ({
+  email: [
+    { required: true, message: t('auth.validation.emailRequired'), trigger: 'blur' },
+    { type: 'email', message: t('auth.validation.emailInvalid'), trigger: 'blur' },
+  ],
+  password: [
+    { required: true, message: t('auth.validation.passwordRequired'), trigger: 'blur' },
+    {
+      min: 8,
+      message: t('auth.validation.passwordMinLength', { min: 8 }),
+      trigger: 'blur',
+    },
+  ],
+  passwordConfirmation: [
+    {
+      required: true,
+      message: t('auth.validation.passwordConfirmRequired'),
+      trigger: 'blur',
+    },
+    {
+      validator(_rule: unknown, value: string) {
+        if (value !== model.password) {
+          return new Error(t('auth.validation.passwordsMismatch'))
+        }
+        return true
+      },
+      trigger: 'blur',
+    },
+  ],
+  role: [
+    { required: true, message: t('auth.validation.roleRequired'), trigger: 'change' },
+  ],
+}))
 
-const { value: email } = useField<string>('email')
-const { value: password } = useField<string>('password')
-const { value: confirmPassword } = useField<string>('confirmPassword')
-const { value: role } = useField<string | null>('role')
-
-function resolveServerError(code: string): string {
-  const map: Record<string, string> = {
-    USER_EXISTS: t('auth.errorUserExists'),
-  }
-  return map[code] || t('auth.errorGeneric')
-}
-
-const onSubmit = handleSubmit(async (values) => {
+async function handleSubmit(e: Event): Promise<void> {
+  e.preventDefault()
   serverError.value = ''
-  isSubmitting.value = true
 
   try {
-    const response = await authApi.register({
-      email: values.email,
-      password: values.password,
-      role: values.role as UserRole,
+    await formRef.value?.validate()
+  } catch {
+    return
+  }
+
+  isSubmitting.value = true
+  try {
+    await authStore.register({
+      email: model.email,
+      password: model.password,
+      password_confirmation: model.passwordConfirmation,
+      role: model.role,
     })
-
-    tokenStorage.setAccessToken(response.access_token)
-    tokenStorage.setRefreshToken(response.refresh_token)
-
-    router.push('/')
+    await router.push('/')
   } catch (err: unknown) {
-    console.error('[RegisterForm] Register error:', err)
-
-    if (err instanceof AxiosError && err.response?.data) {
-      const payload = err.response.data as AuthErrorPayload
-      serverError.value = resolveServerError(payload.error?.code || '')
-    } else if (err instanceof AxiosError) {
-      serverError.value = err.message || t('auth.errorGeneric')
+    const axiosErr = err as { response?: { status?: number } }
+    if (axiosErr.response?.status === 409) {
+      serverError.value = t('auth.errorEmailTaken')
     } else {
-      serverError.value = t('auth.errorGeneric')
+      serverError.value = t('auth.errorRegisterFailed')
     }
   } finally {
     isSubmitting.value = false
   }
-})
+}
 </script>
 
 <template>
-  <NForm class="register-form" @submit.prevent="onSubmit">
-    <NFormItem
-      :label="t('auth.email')"
-      :validation-status="errors.email ? 'error' : undefined"
-      :feedback="errors.email"
-    >
-      <NInput
-        v-model:value="email"
-        type="text"
-        placeholder="email@example.com"
-        size="large"
-        :input-props="{ autocomplete: 'email' }"
-      />
-    </NFormItem>
-
-    <NFormItem
-      :label="t('auth.password')"
-      :validation-status="errors.password ? 'error' : undefined"
-      :feedback="errors.password"
-    >
-      <NInput
-        v-model:value="password"
-        type="password"
-        show-password-on="click"
-        size="large"
-        :placeholder="t('auth.password')"
-        :input-props="{ autocomplete: 'new-password' }"
-      />
-    </NFormItem>
-
-    <NFormItem
-      :label="t('auth.confirmPassword')"
-      :validation-status="errors.confirmPassword ? 'error' : undefined"
-      :feedback="errors.confirmPassword"
-    >
-      <NInput
-        v-model:value="confirmPassword"
-        type="password"
-        show-password-on="click"
-        size="large"
-        :placeholder="t('auth.confirmPassword')"
-        :input-props="{ autocomplete: 'new-password' }"
-      />
-    </NFormItem>
-
-    <NFormItem
-      :label="t('auth.role')"
-      :validation-status="errors.role ? 'error' : undefined"
-      :feedback="errors.role"
-    >
-      <NSelect
-        v-model:value="role"
-        :options="roleOptions"
-        :placeholder="t('auth.role')"
-        size="large"
-      />
-    </NFormItem>
-
+  <NForm
+    ref="formRef"
+    :model="model"
+    :rules="rules"
+    label-placement="top"
+    require-mark-placement="right-hanging"
+    @submit.prevent="handleSubmit"
+  >
     <NAlert
       v-if="serverError"
       type="error"
       :title="serverError"
       closable
-      class="register-form__alert"
+      style="margin-bottom: 16px"
       @close="serverError = ''"
     />
 
+    <NFormItem :label="t('auth.email')" path="email">
+      <NInput
+        v-model:value="model.email"
+        type="text"
+        :placeholder="t('auth.emailPlaceholder')"
+        :input-props="{ autocomplete: 'email' }"
+      />
+    </NFormItem>
+
+    <NFormItem :label="t('auth.password')" path="password">
+      <NInput
+        v-model:value="model.password"
+        type="password"
+        show-password-on="click"
+        :placeholder="t('auth.passwordPlaceholder')"
+        :input-props="{ autocomplete: 'new-password' }"
+      />
+    </NFormItem>
+
+    <NFormItem :label="t('auth.passwordConfirm')" path="passwordConfirmation">
+      <NInput
+        v-model:value="model.passwordConfirmation"
+        type="password"
+        show-password-on="click"
+        :placeholder="t('auth.passwordConfirmPlaceholder')"
+        :input-props="{ autocomplete: 'new-password' }"
+      />
+    </NFormItem>
+
+    <NFormItem :label="t('auth.role')" path="role">
+      <NSelect v-model:value="model.role" :options="roleOptions" />
+    </NFormItem>
+
     <NButton
       type="primary"
-      attr-type="submit"
       block
-      size="large"
       :loading="isSubmitting"
       :disabled="isSubmitting"
-      class="register-form__submit"
+      attr-type="submit"
+      style="margin-top: 8px"
     >
       {{ t('auth.registerButton') }}
     </NButton>
-
-    <NSpace justify="center" class="register-form__footer">
-      <span class="register-form__footer-text">{{ t('auth.hasAccount') }}</span>
-      <router-link to="/login" class="register-form__link">
-        {{ t('auth.goToLogin') }}
-      </router-link>
-    </NSpace>
   </NForm>
 </template>
-
-<style scoped>
-.register-form {
-  width: 100%;
-}
-
-.register-form__alert {
-  margin-bottom: 16px;
-}
-
-.register-form__submit {
-  margin-top: 8px;
-  margin-bottom: 12px;
-}
-
-.register-form__footer {
-  margin-top: 8px;
-}
-
-.register-form__footer-text {
-  color: #8b949e;
-  font-size: 14px;
-}
-
-.register-form__link {
-  color: #58a6ff;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.register-form__link:hover {
-  text-decoration: underline;
-}
-</style>

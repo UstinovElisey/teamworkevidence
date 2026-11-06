@@ -1,18 +1,29 @@
 <script setup lang="ts">
+import AppHeader from '@/components/layout/AppHeader.vue'
 </script>
 
 <template>
   <div class="auth-layout">
-    <router-view />
+    <AppHeader />
+    <main class="auth-layout__content">
+      <slot />
+    </main>
   </div>
 </template>
 
 <style scoped>
 .auth-layout {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
+  background-color: var(--tw-bg-base);
+}
+
+.auth-layout__content {
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0d1117;
+  padding: 24px;
 }
 </style>

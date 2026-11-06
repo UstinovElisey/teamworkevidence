@@ -1,97 +1,133 @@
 import { http, HttpResponse, delay } from 'msw'
-import type { AuthResponse, LoginCredentials, RegisterData } from '@/types/auth'
 
-// Дефолт ДОЛЖЕН совпадать с api.ts
-const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080/api/v1'
-
-function mockUUID(): string {
-  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-    return crypto.randomUUID()
-  }
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = (Math.random() * 16) | 0
-    const v = c === 'x' ? r : (r & 0x3) | 0x8
-    return v.toString(16)
-  })
+function extractToken(authHeader: string | null): string | null {
+  if (!authHeader) return null
+  const parts = authHeader.split(' ')
+  if (parts.length !== 2 || parts[0] !== 'Bearer') return null
+  return parts[1]
 }
 
 export const handlers = [
-  // ── Health check ──
-  http.get(`${BASE_URL}/health`, async () => {
-    await delay(200)
-    return HttpResponse.json({ status: 'ok', timestamp: new Date().toISOString() })
-  }),
+  /* ── POST /api/auth/login ── */
+  http.post('/api/auth/login', async ({ request }) => {
+    console.log('[MSW] POST /api/auth/login intercepted')
+    await delay(300)
+    const body = (await request.json()) as Record<string, unknown>
+    const email = body.email as string
+    const password = body.password as string
 
-  // ── POST /auth/login ──
-  http.post(`${BASE_URL}/auth/login`, async ({ request }) => {
-    await delay(400)
+    console.log('[MSW] login credentials:', { email, password })
 
-    let body: LoginCredentials
-    try {
-      body = (await request.json()) as LoginCredentials
-    } catch {
-      return HttpResponse.json(
-        { error: { code: 'BAD_REQUEST', message: 'Invalid JSON body' } },
-        { status: 400 },
-      )
-    }
-
-    if (body.email === 'test@test.com' && body.password === 'password123') {
-      const response: AuthResponse = {
-        access_token: `mock-access-${Date.now()}`,
-        refresh_token: `mock-refresh-${Date.now()}`,
+    if (email === 'test@test.com' && password === 'password123') {
+      console.log('[MSW] login SUCCESS')
+      return HttpResponse.json({
+        access_token: 'mock-access-' + Date.now(),
+        refresh_token: 'mock-refresh-' + Date.now(),
         user: {
           id: '550e8400-e29b-41d4-a716-446655440000',
-          email: body.email,
+          email: 'test@test.com',
           role: 'developer',
         },
-      }
-      return HttpResponse.json(response, { status: 200 })
+      })
     }
 
-    if (body.email === 'test@test.com') {
-      return HttpResponse.json(
-        { error: { code: 'INVALID_CREDENTIALS', message: 'Invalid email or password' } },
-        { status: 401 },
-      )
-    }
-
+    console.log('[MSW] login FAILED — invalid credentials')
     return HttpResponse.json(
-      { error: { code: 'USER_NOT_FOUND', message: 'User not found' } },
-      { status: 404 },
+      {
+        error: {
+          code: 'INVALID_CREDENTIALS',
+          message: 'Invalid email or password',
+        },
+      },
+      { status: 401 },
     )
   }),
 
-  // ── POST /auth/register ──
-  http.post(`${BASE_URL}/auth/register`, async ({ request }) => {
-    await delay(400)
+  /* ── POST /api/auth/register ── */
+  http.post('/api/auth/register', async ({ request }) => {
+    console.log('[MSW] POST /api/auth/register intercepted')
+    await delay(300)
+    const body = (await request.json()) as Record<string, unknown>
+    const email = body.email as string
+    const role = (body.role as string) || 'developer'
 
-    let body: RegisterData
-    try {
-      body = (await request.json()) as RegisterData
-    } catch {
+    if (email === 'existing@test.com') {
       return HttpResponse.json(
-        { error: { code: 'BAD_REQUEST', message: 'Invalid JSON body' } },
-        { status: 400 },
-      )
-    }
-
-    if (body.email === 'exists@test.com') {
-      return HttpResponse.json(
-        { error: { code: 'USER_EXISTS', message: 'A user with this email already exists' } },
+        {
+          error: {
+            code: 'EMAIL_TAKEN',
+            message: 'Email already registered',
+            fields: { email: 'Email already registered' },
+          },
+        },
         { status: 409 },
       )
     }
 
-    const response: AuthResponse = {
-      access_token: `mock-access-${Date.now()}`,
-      refresh_token: `mock-refresh-${Date.now()}`,
+    return HttpResponse.json({
+      access_token: 'mock-access-' + Date.now(),
+      refresh_token: 'mock-refresh-' + Date.now(),
       user: {
-        id: mockUUID(),
-        email: body.email,
-        role: body.role,
+        id: '660e8400-e29b-41d4-a716-446655440001',
+        email,
+        role,
       },
+    })
+  }),
+
+  /* ── POST /api/auth/refresh ── */
+  http.post('/api/auth/refresh', async ({ request }) => {
+    console.log('[MSW] POST /api/auth/refresh intercepted')
+    await delay(200)
+    const body = (await request.json()) as Record<string, unknown>
+    const refreshToken = body.refresh_token as string
+
+    if (refreshToken && refreshToken.startsWith('mock-refresh-')) {
+      console.log('[MSW] refresh SUCCESS')
+      return HttpResponse.json({
+        access_token: 'mock-access-refreshed-' + Date.now(),
+        refresh_token: 'mock-refresh-new-' + Date.now(),
+      })
     }
-    return HttpResponse.json(response, { status: 201 })
+
+    console.log('[MSW] refresh FAILED')
+    return HttpResponse.json(
+      {
+        error: {
+          code: 'INVALID_REFRESH_TOKEN',
+          message: 'Refresh token is invalid or expired',
+        },
+      },
+      { status: 401 },
+    )
+  }),
+
+  /* ── GET /api/auth/me ── */
+  http.get('/api/auth/me', async ({ request }) => {
+    console.log('[MSW] GET /api/auth/me intercepted')
+    await delay(200)
+    const token = extractToken(request.headers.get('Authorization'))
+
+    if (token && token.startsWith('mock-access-')) {
+      console.log('[MSW] me SUCCESS, token:', token.substring(0, 20) + '...')
+      return HttpResponse.json({
+        id: '550e8400-e29b-41d4-a716-446655440000',
+        email: 'test@test.com',
+        role: 'developer',
+        created_at: '2024-01-15T10:30:00Z',
+        github_connected: false,
+      })
+    }
+
+    console.log('[MSW] me FAILED — bad token:', token)
+    return HttpResponse.json(
+      {
+        error: {
+          code: 'UNAUTHORIZED',
+          message: 'Invalid or expired access token',
+        },
+      },
+      { status: 401 },
+    )
   }),
 ]

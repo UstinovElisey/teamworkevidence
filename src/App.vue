@@ -1,72 +1,107 @@
 <script setup lang="ts">
-import { NConfigProvider } from 'naive-ui'
+import { computed, watchEffect } from 'vue'
+import { useRoute } from 'vue-router'
+import {
+  NConfigProvider,
+  NMessageProvider,
+  darkTheme,
+  type GlobalThemeOverrides,
+} from 'naive-ui'
 import { useTheme } from '@/composables/useTheme'
+import MainLayout from '@/layouts/MainLayout.vue'
+import AuthLayout from '@/layouts/AuthLayout.vue'
 
-const { isDark, theme } = useTheme()
+const route = useRoute()
+const { isDark } = useTheme()
+
+const currentLayout = computed(() => {
+  return route.meta.layout === 'auth' ? AuthLayout : MainLayout
+})
+
+/* ── Тёмная палитра (GitHub Dark) ── */
+const darkOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: '#238636',
+    primaryColorHover: '#2ea043',
+    primaryColorPressed: '#1a7f37',
+    primaryColorSuppl: '#238636',
+    bodyColor: '#0d1117',
+    cardColor: '#161b22',
+    modalColor: '#161b22',
+    popoverColor: '#161b22',
+    inputColor: '#0d1117',
+    tableColor: '#161b22',
+    borderColor: '#30363d',
+    textColorBase: '#c9d1d9',
+    textColor1: '#c9d1d9',
+    textColor2: '#c9d1d9',
+    textColor3: '#8b949e',
+  },
+}
+
+/* ── Светлая палитра (GitHub Light) ── */
+const lightOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: '#1a7f37',
+    primaryColorHover: '#238636',
+    primaryColorPressed: '#116329',
+    primaryColorSuppl: '#1a7f37',
+    bodyColor: '#ffffff',
+    cardColor: '#ffffff',
+    modalColor: '#ffffff',
+    popoverColor: '#ffffff',
+    inputColor: '#ffffff',
+    tableColor: '#ffffff',
+    borderColor: '#d0d7de',
+    textColorBase: '#1f2328',
+    textColor1: '#1f2328',
+    textColor2: '#1f2328',
+    textColor3: '#656d76',
+  },
+}
+
+/* ── Экспорт CSS-переменных в :root для кастомных стилей ── */
+watchEffect(() => {
+  const root = document.documentElement
+  if (isDark.value) {
+    root.style.setProperty('--tw-bg-base', '#0d1117')
+    root.style.setProperty('--tw-bg-surface', '#161b22')
+    root.style.setProperty('--tw-bg-elevated', '#1c2128')
+    root.style.setProperty('--tw-border', '#30363d')
+    root.style.setProperty('--tw-text', '#c9d1d9')
+    root.style.setProperty('--tw-text-muted', '#8b949e')
+    root.style.setProperty('--tw-primary', '#2ea043')
+    root.style.setProperty('--tw-primary-hover', '#3fb950')
+    root.style.setProperty('--tw-danger', '#f85149')
+    root.style.setProperty('--tw-danger-hover', '#ff7b72')
+    root.classList.add('dark')
+    root.classList.remove('light')
+  } else {
+    root.style.setProperty('--tw-bg-base', '#ffffff')
+    root.style.setProperty('--tw-bg-surface', '#f6f8fa')
+    root.style.setProperty('--tw-bg-elevated', '#ffffff')
+    root.style.setProperty('--tw-border', '#d0d7de')
+    root.style.setProperty('--tw-text', '#1f2328')
+    root.style.setProperty('--tw-text-muted', '#656d76')
+    root.style.setProperty('--tw-primary', '#1a7f37')
+    root.style.setProperty('--tw-primary-hover', '#238636')
+    root.style.setProperty('--tw-danger', '#cf222e')
+    root.style.setProperty('--tw-danger-hover', '#a40e26')
+    root.classList.add('light')
+    root.classList.remove('dark')
+  }
+})
 </script>
 
 <template>
-  <NConfigProvider :theme="theme">
-    <div :class="isDark ? 'theme-dark' : 'theme-light'" class="app-root">
-      <RouterView />
-    </div>
+  <NConfigProvider
+    :theme="isDark ? darkTheme : undefined"
+    :theme-overrides="isDark ? darkOverrides : lightOverrides"
+  >
+    <NMessageProvider>
+      <component :is="currentLayout">
+        <RouterView />
+      </component>
+    </NMessageProvider>
   </NConfigProvider>
 </template>
-
-<style>
-/* ── Глобальные CSS-переменные ── */
-
-.theme-dark {
-  --bg-header: #161b22;
-  --bg-sidebar: #0d1117;
-  --bg-main: #0d1117;
-  --bg-page: #0d1117;
-  --border-color: #30363d;
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted: #484f58;
-  --accent: #2ea043;
-  --accent-hover: #3fb950;
-  --menu-active-bg: #1f2937;
-  --menu-hover-bg: #161b22;
-}
-
-.theme-light {
-  --bg-header: #ffffff;
-  --bg-sidebar: #f6f8fa;
-  --bg-main: #ffffff;
-  --bg-page: #ffffff;
-  --border-color: #d0d7de;
-  --text-primary: #1f2328;
-  --text-secondary: #656d76;
-  --text-muted: #8b949e;
-  --accent: #1a7f37;
-  --accent-hover: #238636;
-  --menu-active-bg: #eaeef2;
-  --menu-hover-bg: #f3f4f6;
-}
-
-/* ── Сброс ── */
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html,
-body,
-#app {
-  height: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial,
-    sans-serif;
-  background-color: var(--bg-page);
-  color: var(--text-primary);
-}
-
-.app-root {
-  height: 100%;
-}
-</style>

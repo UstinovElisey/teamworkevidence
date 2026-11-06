@@ -1,5 +1,5 @@
-/** Роли пользователей (по ТЗ) */
-export type UserRole = 'developer' | 'employer' | 'organizer' | 'customer'
+/** Роли пользователей */
+export type UserRole = 'developer' | 'teamlead' | 'manager' | 'admin'
 
 /** Данные для входа */
 export interface LoginCredentials {
@@ -11,27 +11,32 @@ export interface LoginCredentials {
 export interface RegisterData {
   email: string
   password: string
+  password_confirmation: string
   role: UserRole
 }
 
-/** Краткая информация о пользователе (в ответе auth) */
+/** Краткий профиль пользователя (приходит при login/register) */
 export interface UserSummary {
   id: string
   email: string
   role: UserRole
 }
 
-/** Ответ auth-эндпоинтов */
+/** Ответ login / register */
 export interface AuthResponse {
   access_token: string
   refresh_token: string
   user: UserSummary
 }
 
-/** Структура ошибки от API */
-export interface AuthErrorPayload {
-  error: {
-    code: string
-    message: string
-  }
+/** Ответ refresh-эндпоинта (только новые токены, без user) */
+export interface RefreshResponse {
+  access_token: string
+  refresh_token: string
+}
+
+/** Расширенный профиль пользователя (GET /auth/me) */
+export interface UserProfile extends UserSummary {
+  created_at: string
+  github_connected: boolean
 }

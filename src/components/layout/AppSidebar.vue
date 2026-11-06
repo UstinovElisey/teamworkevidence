@@ -1,41 +1,32 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { NMenu } from 'naive-ui'
-import type { MenuOption } from 'naive-ui'
+import { NMenu, type MenuOption } from 'naive-ui'
+import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
+import { useUiStore } from '@/stores/uiStore'
 
 const { t } = useI18n()
-const route = useRoute()
 const router = useRouter()
+const uiStore = useUiStore()
+const { activeSection } = storeToRefs(uiStore)
 
 const menuOptions = computed<MenuOption[]>(() => [
-  {
-    label: t('nav.dashboard'),
-    key: '/',
-  },
-  {
-    label: t('nav.profile'),
-    key: '/profile',
-  },
-  {
-    label: t('nav.teams'),
-    key: '/teams',
-  },
-  {
-    label: t('nav.marketplace'),
-    key: '/marketplace',
-  },
-  {
-    label: t('nav.hackathons'),
-    key: '/hackathons',
-  },
+  { label: t('nav.dashboard'), key: 'home' },
+  { label: t('nav.reports'), key: 'reports' },
+  { label: t('nav.team'), key: 'team' },
+  { label: t('nav.settings'), key: 'settings' },
 ])
 
-const activeKey = computed(() => route.path)
+function handleSelect(key: string): void {
+  console.log('[Sidebar] click key =', key)
+  uiStore.setActiveSection(key)
 
-function handleMenuSelect(key: string) {
-  router.push(key)
+  /* Для реализованных разделов — реальный переход на роут */
+  if (key === 'home') {
+    router.push({ name: 'home' })
+  }
+  /* Для остальных контент меняет HomePage через uiStore.activeSection */
 }
 </script>
 
@@ -43,8 +34,9 @@ function handleMenuSelect(key: string) {
   <aside class="app-sidebar">
     <NMenu
       :options="menuOptions"
-      :value="activeKey"
-      @update:value="handleMenuSelect"
+      :value="activeSection"
+      :indent="18"
+      @update:value="handleSelect"
     />
   </aside>
 </template>
@@ -52,11 +44,12 @@ function handleMenuSelect(key: string) {
 <style scoped>
 .app-sidebar {
   width: 220px;
-  height: 100%;
-  padding: 12px 0;
-  background-color: var(--bg-sidebar);
-  border-right: 1px solid var(--border-color);
-  overflow-y: auto;
   flex-shrink: 0;
+  padding: 12px 0;
+  background-color: var(--tw-bg-surface);
+  border-right: 1px solid var(--tw-border);
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
 }
 </style>

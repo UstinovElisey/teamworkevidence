@@ -1,20 +1,29 @@
-import { ref, computed } from 'vue'
-import { darkTheme } from 'naive-ui'
-import type { GlobalTheme } from 'naive-ui'
+import { ref, watch } from 'vue'
 
-const isDark = ref(
-  localStorage.getItem('theme') !== 'light',
-)
+const STORAGE_KEY = 'app_theme'
+
+/* Инициализация из localStorage, по умолчанию — dark */
+function loadTheme(): boolean {
+  if (typeof window === 'undefined') return true
+  const stored = localStorage.getItem(STORAGE_KEY)
+  if (stored === 'light') return false
+  if (stored === 'dark') return true
+  return true /* default dark */
+}
+
+const isDark = ref<boolean>(loadTheme())
+
+watch(isDark, (val) => {
+  localStorage.setItem(STORAGE_KEY, val ? 'dark' : 'light')
+})
 
 export function useTheme() {
-  const theme = computed<GlobalTheme | null>(() =>
-    isDark.value ? darkTheme : null,
-  )
-
-  function toggleTheme() {
+  function toggleTheme(): void {
     isDark.value = !isDark.value
-    localStorage.setItem('theme', isDark.value ? 'dark' : 'light')
   }
 
-  return { isDark, theme, toggleTheme }
+  return {
+    isDark,
+    toggleTheme,
+  }
 }

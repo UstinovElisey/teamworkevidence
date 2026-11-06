@@ -1,60 +1,69 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { NCard } from 'naive-ui'
+import { NCard, NText } from 'naive-ui'
 import LoginForm from '@/components/auth/LoginForm.vue'
 
 const { t } = useI18n()
 </script>
 
 <template>
-  <div class="login-page">
-    <div class="login-page__logo">
-      <span class="login-page__logo-icon">&#9881;</span>
-    </div>
-    <NCard
-      :title="t('auth.login')"
-      class="login-page__card"
-      :bordered="true"
-      size="large"
-    >
-      <LoginForm />
-    </NCard>
-  </div>
+  <NCard class="auth-card" :bordered="true">
+    <template #header>
+      <div class="auth-card__header">
+        <span class="auth-card__icon">&#9670;</span>
+        {{ t('auth.loginTitle') }}
+      </div>
+    </template>
+
+    <LoginForm />
+
+    <template #footer>
+      <NText depth="3" class="auth-card__footer">
+        {{ t('auth.noAccount') }}
+        <RouterLink to="/register" class="auth-card__link">
+          {{ t('auth.goToRegister') }}
+        </RouterLink>
+      </NText>
+    </template>
+  </NCard>
 </template>
 
 <style scoped>
-.login-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  padding: 24px 16px;
-}
-
-.login-page__logo {
-  margin-bottom: 24px;
-}
-
-.login-page__logo-icon {
-  font-size: 48px;
-  color: #238636;
-}
-
-.login-page__card {
+.auth-card {
   width: 100%;
-  max-width: 400px;
-  background-color: #0d1117;
-  border-color: #30363d;
+  max-width: 420px;
+  background-color: var(--tw-bg-surface);
+  border-color: var(--tw-border);
 }
 
-.login-page__card :deep(.n-card-header) {
-  text-align: center;
-}
-
-.login-page__card :deep(.n-card-header__main) {
-  color: #f0f6fc;
-  font-size: 24px;
+.auth-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
   font-weight: 600;
+  color: var(--tw-text);
+}
+
+.auth-card__icon {
+  color: var(--tw-primary);
+  font-size: 22px;
+}
+
+.auth-card__footer {
+  text-align: center;
+  display: block;
+  font-size: 13px;
+}
+
+.auth-card__link {
+  color: var(--tw-primary);
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.auth-card__link:hover {
+  text-decoration: underline;
+  color: var(--tw-primary-hover);
 }
 </style>

@@ -1,27 +1,8 @@
-/** Стандартный пагинированный ответ API */
-export interface PaginatedResponse<T> {
-  items: T[]
-  total: number
-  page: number
-  limit: number
-}
-
-/** Структура ошибки API */
-export interface ApiErrorPayload {
+/** Стандартная обёртка ошибки API */
+export interface ApiError {
   error: {
     code: string
     message: string
+    fields?: Record<string, string>
   }
-}
-
-/** Ответ health-check */
-export interface HealthCheckResponse {
-  status: 'ok'
-  timestamp: string
-}
-
-/** Параметры пагинации для запросов */
-export interface PaginationParams {
-  page?: number
-  limit?: number
 }

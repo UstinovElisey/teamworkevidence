@@ -1,44 +1,25 @@
-const REFRESH_KEY = 'refresh_token'
-
-/**
- * Хранилище токенов.
- *
- *  access  -- в памяти модуля (не переживает перезагрузку)
- *  refresh -- в sessionStorage (прототип; в prod -- HttpOnly cookie)
- */
-
-let accessToken: string | null = null
+const ACCESS_TOKEN_KEY = 'access_token'
+const REFRESH_TOKEN_KEY = 'refresh_token'
 
 export const tokenStorage = {
-  // access
   getAccessToken(): string | null {
-    return accessToken
+    return sessionStorage.getItem(ACCESS_TOKEN_KEY)
   },
 
   setAccessToken(token: string): void {
-    accessToken = token
+    sessionStorage.setItem(ACCESS_TOKEN_KEY, token)
   },
 
-  clearAccessToken(): void {
-    accessToken = null
-  },
-
-  // refresh
   getRefreshToken(): string | null {
-    return sessionStorage.getItem(REFRESH_KEY)
+    return sessionStorage.getItem(REFRESH_TOKEN_KEY)
   },
 
   setRefreshToken(token: string): void {
-    sessionStorage.setItem(REFRESH_KEY, token)
+    sessionStorage.setItem(REFRESH_TOKEN_KEY, token)
   },
 
-  clearRefreshToken(): void {
-    sessionStorage.removeItem(REFRESH_KEY)
-  },
-
-  // logout
   clearAll(): void {
-    accessToken = null
-    sessionStorage.removeItem(REFRESH_KEY)
+    sessionStorage.removeItem(ACCESS_TOKEN_KEY)
+    sessionStorage.removeItem(REFRESH_TOKEN_KEY)
   },
 }

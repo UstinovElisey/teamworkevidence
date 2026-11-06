@@ -1,73 +1,59 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { NDropdown, NButton, NSpace } from 'naive-ui'
-import type { DropdownOption } from 'naive-ui'
+import { NButton, NSpace, NText } from 'naive-ui'
 import { useTheme } from '@/composables/useTheme'
-import type { SupportedLocale } from '@/i18n'
-import { SUPPORTED_LOCALES } from '@/i18n'
+import { useAuthStore } from '@/stores/authStore'
 
 const { t, locale } = useI18n()
 const { isDark, toggleTheme } = useTheme()
+const authStore = useAuthStore()
 
-const currentLocaleLabel = computed(() => locale.value.toUpperCase())
+const currentLocaleLabel = computed(() => (locale.value === 'ru' ? 'EN' : 'RU'))
 
-const languageOptions = computed<DropdownOption[]>(() =>
-  SUPPORTED_LOCALES.map((lang) => ({
-    label: t(`language.${lang}`),
-    key: lang,
-  })),
-)
-
-function handleLocaleSelect(key: string) {
-  const lang = key as SupportedLocale
-  locale.value = lang
-  localStorage.setItem('locale', lang)
+function toggleLocale(): void {
+  locale.value = locale.value === 'ru' ? 'en' : 'ru'
 }
 
-const themeIcon = computed(() => (isDark.value ? '☀' : '☾'))
-const themeLabel = computed(() =>
-  isDark.value ? t('theme.light') : t('theme.dark'),
-)
+async function handleLogout(): Promise<void> {
+  await authStore.logout()
+}
 </script>
 
 <template>
   <header class="app-header">
-    <div class="app-header__left">
-      <span class="app-header__logo">◆</span>
+    <div class="app-header__brand">
+      <span class="app-header__logo">&#9670;</span>
       <span class="app-header__title">{{ t('app.name') }}</span>
     </div>
 
-    <div class="app-header__right">
-      <NSpace :size="8" align="center">
-        <NDropdown
-          :options="languageOptions"
-          :value="locale"
-          trigger="click"
-          @select="handleLocaleSelect"
-        >
-          <NButton
-            quaternary
-            size="small"
-            class="header-btn"
-            :title="t('language.switch')"
-          >
-            <span class="header-btn__icon">⊕</span>
-            <span class="header-btn__label">{{ currentLocaleLabel }}</span>
-          </NButton>
-        </NDropdown>
+    <NSpace align="center" :size="12">
+      <NText
+        v-if="authStore.isAuthenticated && authStore.user"
+        class="app-header__user"
+        depth="2"
+      >
+        &#9673; {{ authStore.user.email }}
+      </NText>
 
-        <NButton
-          quaternary
-          size="small"
-          class="header-btn"
-          :title="themeLabel"
-          @click="toggleTheme"
-        >
-          <span class="header-btn__icon">{{ themeIcon }}</span>
-        </NButton>
-      </NSpace>
-    </div>
+      <NButton quaternary size="small" @click="toggleLocale">
+        {{ currentLocaleLabel }}
+      </NButton>
+
+      <NButton quaternary size="small" @click="toggleTheme">
+        {{ isDark ? '&#9788;' : '&#9790;' }}
+      </NButton>
+
+      <NButton
+        v-if="authStore.isAuthenticated"
+        quaternary
+        size="small"
+        class="app-header__btn--logout"
+        @click="handleLogout"
+      >
+        &#10140; {{ t('auth.logout') }}
+      </NButton>
+    </NSpace>
   </header>
 </template>
 
@@ -78,53 +64,39 @@ const themeLabel = computed(() =>
   justify-content: space-between;
   height: 56px;
   padding: 0 20px;
-  background-color: var(--bg-header);
-  border-bottom: 1px solid var(--border-color);
+  background-color: var(--tw-bg-surface);
+  border-bottom: 1px solid var(--tw-border);
   flex-shrink: 0;
 }
 
-.app-header__left {
+.app-header__brand {
   display: flex;
   align-items: center;
   gap: 10px;
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--tw-text);
 }
 
 .app-header__logo {
+  color: var(--tw-primary);
   font-size: 20px;
-  color: var(--accent);
-  line-height: 1;
 }
 
 .app-header__title {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-primary);
-  letter-spacing: -0.01em;
+  color: var(--tw-text);
 }
 
-.app-header__right {
-  display: flex;
-  align-items: center;
+.app-header__user {
+  font-size: 13px;
+  color: var(--tw-text-muted);
 }
 
-.header-btn {
-  color: var(--text-secondary) !important;
-  transition: color 0.15s ease;
+.app-header__btn--logout {
+  color: var(--tw-danger) !important;
 }
 
-.header-btn:hover {
-  color: var(--text-primary) !important;
-}
-
-.header-btn__icon {
-  font-size: 15px;
-  line-height: 1;
-  margin-right: 4px;
-}
-
-.header-btn__label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
+.app-header__btn--logout:hover {
+  color: var(--tw-danger-hover) !important;
 }
 </style>
