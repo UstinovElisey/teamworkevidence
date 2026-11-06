@@ -1,34 +1,81 @@
 {
   "app": {
-    "name": "TeamWorkEvidence"
+    "title": "TeamWork Evidence",
+    "loading": "Loading...",
+    "error": "Error",
+    "notFound": "Page not found",
+    "backToHome": "Back to Home",
+    "name": "TeamWork Evidence"
   },
   "nav": {
-    "dashboard": "Dashboard",
+    "home": "Home",
+    "projects": "Projects",
+    "hackathons": "Hackathons",
     "profile": "Profile",
-    "teams": "Teams",
+    "dashboard": "Dashboard",
     "marketplace": "Marketplace",
-    "hackathons": "Hackathons"
+    "settings": "Settings",
+    "teams": "Teams"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "language": {
+    "toggle": "Change language",
+    "ru": "Русский",
+    "en": "English"
   },
   "auth": {
     "login": "Sign In",
     "register": "Sign Up",
-    "logout": "Sign Out"
+    "logout": "Sign Out",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "role": "Role",
+    "roles": {
+      "developer": "Developer",
+      "employer": "Employer",
+      "organizer": "Organizer",
+      "customer": "Customer"
+    },
+    "loginButton": "Sign In",
+    "registerButton": "Sign Up",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "goToRegister": "Sign Up",
+    "goToLogin": "Sign In",
+    "loginSuccess": "Successfully signed in",
+    "registerSuccess": "Registration successful",
+    "errorInvalidCredentials": "Invalid email or password",
+    "errorUserExists": "A user with this email already exists",
+    "errorUserNotFound": "User not found",
+    "errorGeneric": "An error occurred. Please try again later.",
+    "validation": {
+      "required": "This field is required",
+      "invalidEmail": "Invalid email address",
+      "minLength8": "Minimum 8 characters",
+      "passwordMismatch": "Passwords do not match"
+    },
+    "oauthGithub": "Sign in with GitHub"
   },
   "common": {
-    "loading": "Loading...",
+    "todo": "Coming soon",
     "save": "Save",
     "cancel": "Cancel",
-    "notFound": "Page not found",
-    "backHome": "Back to Home",
-    "todo": "Coming soon"
-  },
-  "theme": {
-    "dark": "Dark theme",
-    "light": "Light theme"
-  },
-  "language": {
-    "ru": "Русский",
-    "en": "English",
-    "switch": "Language"
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "loading": "Loading...",
+    "empty": "Empty",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next"
   }
 }

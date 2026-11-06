@@ -4,13 +4,11 @@ import type { LoginCredentials, RegisterData, AuthResponse } from '@/types/auth'
 const AUTH_PREFIX = '/auth'
 
 export const authApi = {
-  async login(data: LoginCredentials): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>(`${AUTH_PREFIX}/login`, data)
-    return response.data
+  login(data: LoginCredentials): Promise<AuthResponse> {
+    return apiClient.post<AuthResponse>(`${AUTH_PREFIX}/login`, data).then((res) => res.data)
   },
 
-  async register(data: RegisterData): Promise<AuthResponse> {
-    const response = await apiClient.post<AuthResponse>(`${AUTH_PREFIX}/register`, data)
-    return response.data
+  register(data: RegisterData): Promise<AuthResponse> {
+    return apiClient.post<AuthResponse>(`${AUTH_PREFIX}/register`, data).then((res) => res.data)
   },
 }

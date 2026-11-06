@@ -1,34 +1,81 @@
 {
   "app": {
-    "name": "TeamWorkEvidence"
+    "title": "TeamWork Evidence",
+    "loading": "Загрузка...",
+    "error": "Ошибка",
+    "notFound": "Страница не найдена",
+    "backToHome": "Вернуться на главную",
+    "name": "TeamWork Evidence"
   },
   "nav": {
-    "dashboard": "Дашборд",
+    "home": "Главная",
+    "projects": "Проекты",
+    "hackathons": "Хакатоны",
     "profile": "Профиль",
-    "teams": "Команды",
+    "dashboard": "Дашборд",
     "marketplace": "Маркетплейс",
-    "hackathons": "Хакатоны"
+    "settings": "Настройки",
+    "teams": "Команды"
+  },
+  "theme": {
+    "toggle": "Переключить тему",
+    "light": "Светлая",
+    "dark": "Тёмная"
+  },
+  "language": {
+    "toggle": "Сменить язык",
+    "ru": "Русский",
+    "en": "English"
   },
   "auth": {
     "login": "Вход",
     "register": "Регистрация",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "email": "Email",
+    "password": "Пароль",
+    "confirmPassword": "Подтверждение пароля",
+    "role": "Роль",
+    "roles": {
+      "developer": "Разработчик",
+      "employer": "Работодатель",
+      "organizer": "Организатор",
+      "customer": "Заказчик"
+    },
+    "loginButton": "Войти",
+    "registerButton": "Зарегистрироваться",
+    "noAccount": "Нет аккаунта?",
+    "hasAccount": "Уже есть аккаунт?",
+    "goToRegister": "Зарегистрироваться",
+    "goToLogin": "Войти",
+    "loginSuccess": "Вход выполнен успешно",
+    "registerSuccess": "Регистрация успешна",
+    "errorInvalidCredentials": "Неверный email или пароль",
+    "errorUserExists": "Пользователь с таким email уже существует",
+    "errorUserNotFound": "Пользователь не найден",
+    "errorGeneric": "Произошла ошибка. Попробуйте позже.",
+    "validation": {
+      "required": "Обязательное поле",
+      "invalidEmail": "Некорректный email",
+      "minLength8": "Минимум 8 символов",
+      "passwordMismatch": "Пароли не совпадают"
+    },
+    "oauthGithub": "Войти через GitHub"
   },
   "common": {
-    "loading": "Загрузка...",
+    "todo": "В разработке",
     "save": "Сохранить",
     "cancel": "Отмена",
-    "notFound": "Страница не найдена",
-    "backHome": "На главную",
-    "todo": "В разработке"
-  },
-  "theme": {
-    "dark": "Тёмная тема",
-    "light": "Светлая тема"
-  },
-  "language": {
-    "ru": "Русский",
-    "en": "English",
-    "switch": "Язык"
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "create": "Создать",
+    "search": "Поиск",
+    "loading": "Загрузка...",
+    "empty": "Пусто",
+    "confirm": "Подтвердить",
+    "yes": "Да",
+    "no": "Нет",
+    "close": "Закрыть",
+    "back": "Назад",
+    "next": "Далее"
   }
 }

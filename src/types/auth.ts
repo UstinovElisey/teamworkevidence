@@ -27,3 +27,11 @@ export interface AuthResponse {
   refresh_token: string
   user: UserSummary
 }
+
+/** Структура ошибки от API */
+export interface AuthErrorPayload {
+  error: {
+    code: string
+    message: string
+  }
+}
