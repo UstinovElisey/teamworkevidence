@@ -1,79 +1,64 @@
 import type { RouteRecordRaw } from 'vue-router'
-import MainLayout from '@/layouts/MainLayout.vue'
-import AuthLayout from '@/layouts/AuthLayout.vue'
-import HomePage from '@/views/HomePage.vue'
-import LoginPage from '@/views/LoginPage.vue'
-import RegisterPage from '@/views/RegisterPage.vue'
-import NotFoundPage from '@/views/NotFoundPage.vue'
-
-declare module 'vue-router' {
-  interface RouteMeta {
-    requiresAuth?: boolean
-    guestOnly?: boolean
-    title: string
-    roles?: Array<'developer' | 'employer' | 'organizer' | 'customer' | 'admin'>
-  }
-}
 
 export const routes: RouteRecordRaw[] = [
   {
     path: '/',
-    component: AuthLayout,
+    component: () => import('@/layouts/MainLayout.vue'),
     children: [
       {
-        path: 'login',
-        name: 'login',
-        component: LoginPage,
-        meta: { guestOnly: true, title: 'Вход' },
+        path: '',
+        name: 'home',
+        component: () => import('@/views/HomePage.vue'),
+        meta: { title: 'nav.dashboard' },
       },
       {
-        path: 'register',
-        name: 'register',
-        component: RegisterPage,
-        meta: { guestOnly: true, title: 'Регистрация' },
+        path: 'profile',
+        name: 'profile',
+        component: () => import('@/views/HomePage.vue'),
+        meta: { title: 'nav.profile' },
+      },
+      {
+        path: 'teams',
+        name: 'teams',
+        component: () => import('@/views/HomePage.vue'),
+        meta: { title: 'nav.teams' },
+      },
+      {
+        path: 'marketplace',
+        name: 'marketplace',
+        component: () => import('@/views/HomePage.vue'),
+        meta: { title: 'nav.marketplace' },
+      },
+      {
+        path: 'hackathons',
+        name: 'hackathons',
+        component: () => import('@/views/HomePage.vue'),
+        meta: { title: 'nav.hackathons' },
       },
     ],
   },
   {
     path: '/',
-    component: MainLayout,
+    component: () => import('@/layouts/AuthLayout.vue'),
     children: [
       {
-        path: '',
-        name: 'home',
-        component: HomePage,
-        meta: { requiresAuth: true, title: 'Дашборд' },
+        path: 'login',
+        name: 'login',
+        component: () => import('@/views/LoginPage.vue'),
+        meta: { title: 'auth.login', guestOnly: true },
       },
       {
-        path: 'profile',
-        name: 'profile',
-        component: { template: '<h2 class="text-2xl font-semibold">TODO: Профиль</h2>' },
-        meta: { requiresAuth: true, title: 'Профиль' },
-      },
-      {
-        path: 'teams',
-        name: 'teams',
-        component: { template: '<h2 class="text-2xl font-semibold">TODO: Команды</h2>' },
-        meta: { requiresAuth: true, title: 'Команды' },
-      },
-      {
-        path: 'marketplace',
-        name: 'marketplace',
-        component: { template: '<h2 class="text-2xl font-semibold">TODO: Маркетплейс</h2>' },
-        meta: { requiresAuth: true, title: 'Маркетплейс' },
-      },
-      {
-        path: 'hackathons',
-        name: 'hackathons',
-        component: { template: '<h2 class="text-2xl font-semibold">TODO: Хакатоны</h2>' },
-        meta: { requiresAuth: true, title: 'Хакатоны' },
+        path: 'register',
+        name: 'register',
+        component: () => import('@/views/RegisterPage.vue'),
+        meta: { title: 'auth.register', guestOnly: true },
       },
     ],
   },
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
-    component: NotFoundPage,
-    meta: { title: 'Не найдено' },
+    component: () => import('@/views/NotFoundPage.vue'),
+    meta: { title: 'common.notFound' },
   },
 ]

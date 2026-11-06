@@ -1,87 +1,62 @@
 <script setup lang="ts">
-import { computed, h } from 'vue'
-import { useRoute, useRouter, RouterLink } from 'vue-router'
-import { NLayoutSider, NMenu } from 'naive-ui'
+import { computed } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { NMenu } from 'naive-ui'
 import type { MenuOption } from 'naive-ui'
-import { useTheme } from '@/composables/useTheme'
 
+const { t } = useI18n()
 const route = useRoute()
 const router = useRouter()
-const { isDark } = useTheme()
 
-const menuOptions: MenuOption[] = [
+const menuOptions = computed<MenuOption[]>(() => [
   {
-    label: () =>
-      h(RouterLink, { to: '/' }, { default: () => 'Дашборд' }),
+    label: t('nav.dashboard'),
     key: '/',
   },
   {
-    label: () =>
-      h(RouterLink, { to: '/teams' }, { default: () => 'Команды' }),
+    label: t('nav.profile'),
+    key: '/profile',
+  },
+  {
+    label: t('nav.teams'),
     key: '/teams',
   },
   {
-    label: () =>
-      h(RouterLink, { to: '/marketplace' }, { default: () => 'Маркетплейс' }),
+    label: t('nav.marketplace'),
     key: '/marketplace',
   },
   {
-    label: () =>
-      h(RouterLink, { to: '/hackathons' }, { default: () => 'Хакатоны' }),
+    label: t('nav.hackathons'),
     key: '/hackathons',
   },
-  {
-    label: () =>
-      h(RouterLink, { to: '/profile' }, { default: () => 'Профиль' }),
-    key: '/profile',
-  },
-]
+])
 
 const activeKey = computed(() => route.path)
 
-const siderBg = computed(() => (isDark.value ? '#0d1117' : '#f6f8fa'))
-const siderBorder = computed(() => (isDark.value ? '#30363d' : '#d0d7de'))
-
-function goHome() {
-  router.push('/')
+function handleMenuSelect(key: string) {
+  router.push(key)
 }
 </script>
 
 <template>
-  <n-layout-sider
-    bordered
-    :width="240"
-    :native-scrollbar="false"
-    :style="{
-      backgroundColor: siderBg,
-      borderRight: `1px solid ${siderBorder}`,
-    }"
-  >
-    <div
-      class="flex h-14 cursor-pointer items-center gap-2 px-4"
-      :style="{ borderBottom: `1px solid ${siderBorder}` }"
-      @click="goHome"
-    >
-      <div
-        class="flex h-8 w-8 items-center justify-center rounded-md text-sm font-bold text-white"
-        style="background-color: #0f3d2e;"
-      >
-        TE
-      </div>
-      <span
-        class="text-sm font-semibold"
-        :class="isDark ? 'text-gray-100' : 'text-gray-900'"
-      >
-        TeamWorkEvidence
-      </span>
-    </div>
-
-    <n-menu
-      :value="activeKey"
+  <aside class="app-sidebar">
+    <NMenu
       :options="menuOptions"
-      :indent="18"
-      :root-indent="18"
-      class="pt-2"
+      :value="activeKey"
+      @update:value="handleMenuSelect"
     />
-  </n-layout-sider>
+  </aside>
 </template>
+
+<style scoped>
+.app-sidebar {
+  width: 220px;
+  height: 100%;
+  padding: 12px 0;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+</style>

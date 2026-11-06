@@ -1,20 +1,12 @@
 import { createApp } from 'vue'
-import { createPinia } from 'pinia'
-import App from '@/App.vue'
-import router from '@/router'
-import '@/assets/styles/main.css'
+import App from './App.vue'
+import router from './router'
+import i18n from './i18n'
+import './assets/styles/main.css'
 
-async function bootstrap() {
-  // MSW стартует ДО mount, чтобы перехватить запросы
-  // из stores / composables, вызванных при инициализации
-  const { initMocks } = await import('@/mocks')
-  await initMocks()
+const app = createApp(App)
 
-  const app = createApp(App)
+app.use(router)
+app.use(i18n)
 
-  app.use(createPinia())
-  app.use(router)
-  app.mount('#app')
-}
-
-bootstrap()
+app.mount('#app')

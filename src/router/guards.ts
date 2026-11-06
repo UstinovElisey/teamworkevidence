@@ -1,15 +1,16 @@
 import type { Router } from 'vue-router'
-
-const APP_TITLE = 'TeamWorkEvidence'
+import i18n from '@/i18n'
 
 export function setupGuards(router: Router): void {
   router.beforeEach((to, _from, next) => {
-    // TODO (задача 7): проверить токен из auth store,
-    // обработать requiresAuth / guestOnly / roles,
-    // редиректить на /login или / при необходимости.
-    document.title = to.meta?.title
-      ? `${to.meta.title} — ${APP_TITLE}`
-      : APP_TITLE
+    // TODO (задача 7): проверить токен, роли, редиректы
+
+    const t = i18n.global.t
+    const pageTitle = to.meta.title
+      ? t(to.meta.title as string)
+      : t('app.name')
+
+    document.title = `${pageTitle} — ${t('app.name')}`
     next()
   })
 }
