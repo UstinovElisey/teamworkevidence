@@ -41,11 +41,7 @@ function handleMenuSelect(key: string) {
 
 <template>
   <aside class="app-sidebar">
-    <NMenu
-      :options="menuOptions"
-      :value="activeKey"
-      @update:value="handleMenuSelect"
-    />
+    <NMenu :options="menuOptions" :value="activeKey" @update:value="handleMenuSelect" />
   </aside>
 </template>
 

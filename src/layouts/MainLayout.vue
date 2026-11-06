@@ -35,4 +35,19 @@ import AppSidebar from '@/components/layout/AppSidebar.vue'
   padding: 24px 32px;
   background-color: var(--bg-main);
 }
+
+@media (max-width: 767px) {
+  .main-layout__body {
+    overflow-y: auto;
+  }
+
+  .main-layout__body :deep(.app-sidebar) {
+    display: none;
+  }
+
+  .main-layout__content {
+    overflow: visible;
+    padding: 8px;
+  }
+}
 </style>

@@ -5,15 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
-import {
-  NForm,
-  NFormItem,
-  NInput,
-  NButton,
-  NSelect,
-  NAlert,
-  NSpace,
-} from 'naive-ui'
+import { NForm, NFormItem, NInput, NButton, NSelect, NAlert, NSpace } from 'naive-ui'
 import type { SelectOption } from 'naive-ui'
 import { authApi } from '@/services/authApi'
 import { tokenStorage } from '@/services/tokenStorage'
@@ -26,17 +18,9 @@ const router = useRouter()
 const registerSchema = toTypedSchema(
   z
     .object({
-      email: z
-        .string()
-        .min(1, 'auth.validation.required')
-        .email('auth.validation.invalidEmail'),
-      password: z
-        .string()
-        .min(1, 'auth.validation.required')
-        .min(8, 'auth.validation.minLength8'),
-      confirmPassword: z
-        .string()
-        .min(1, 'auth.validation.required'),
+      email: z.string().min(1, 'auth.validation.required').email('auth.validation.invalidEmail'),
+      password: z.string().min(1, 'auth.validation.required').min(8, 'auth.validation.minLength8'),
+      confirmPassword: z.string().min(1, 'auth.validation.required'),
       role: z.enum(['developer', 'employer', 'organizer', 'customer'], {
         required_error: 'auth.validation.required',
         invalid_type_error: 'auth.validation.required',
@@ -167,7 +151,10 @@ const onSubmit = handleSubmit(async (values) => {
 
     <NSpace justify="center" style="margin-top: 16px" :size="4">
       <span style="font-size: 14px; opacity: 0.7">{{ t('auth.hasAccount') }}</span>
-      <RouterLink to="/login" style="color: var(--n-color-target, #2ea043); font-size: 14px; text-decoration: none">
+      <RouterLink
+        to="/login"
+        style="color: var(--n-color-target, #2ea043); font-size: 14px; text-decoration: none"
+      >
         {{ t('auth.goToLogin') }} →
       </RouterLink>
     </NSpace>

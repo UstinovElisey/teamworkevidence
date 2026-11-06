@@ -5,14 +5,7 @@ import { useI18n } from 'vue-i18n'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { z } from 'zod'
-import {
-  NForm,
-  NFormItem,
-  NInput,
-  NButton,
-  NAlert,
-  NSpace,
-} from 'naive-ui'
+import { NForm, NFormItem, NInput, NButton, NAlert, NSpace } from 'naive-ui'
 import { authApi } from '@/services/authApi'
 import { tokenStorage } from '@/services/tokenStorage'
 
@@ -22,14 +15,8 @@ const router = useRouter()
 /* ---------- schema ---------- */
 const loginSchema = toTypedSchema(
   z.object({
-    email: z
-      .string()
-      .min(1, 'auth.validation.required')
-      .email('auth.validation.invalidEmail'),
-    password: z
-      .string()
-      .min(1, 'auth.validation.required')
-      .min(8, 'auth.validation.minLength8'),
+    email: z.string().min(1, 'auth.validation.required').email('auth.validation.invalidEmail'),
+    password: z.string().min(1, 'auth.validation.required').min(8, 'auth.validation.minLength8'),
   }),
 )
 
@@ -115,7 +102,10 @@ const onSubmit = handleSubmit(async (values) => {
 
     <NSpace justify="center" style="margin-top: 16px" :size="4">
       <span style="font-size: 14px; opacity: 0.7">{{ t('auth.noAccount') }}</span>
-      <RouterLink to="/register" style="color: var(--n-color-target, #2ea043); font-size: 14px; text-decoration: none">
+      <RouterLink
+        to="/register"
+        style="color: var(--n-color-target, #2ea043); font-size: 14px; text-decoration: none"
+      >
         {{ t('auth.goToRegister') }} →
       </RouterLink>
     </NSpace>

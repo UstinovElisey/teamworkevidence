@@ -6,9 +6,7 @@ export function setupGuards(router: Router): void {
     // TODO (задача 7): проверить токен, роли, редиректы
 
     const t = i18n.global.t
-    const pageTitle = to.meta.title
-      ? t(to.meta.title as string)
-      : t('app.name')
+    const pageTitle = to.meta.title ? t(to.meta.title as string) : t('app.name')
 
     document.title = `${pageTitle} — ${t('app.name')}`
     next()

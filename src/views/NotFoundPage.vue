@@ -9,17 +9,9 @@ const router = useRouter()
 
 <template>
   <div class="not-found">
-    <NResult
-      status="404"
-      :title="'404'"
-      :description="t('common.notFound')"
-    >
+    <NResult status="404" :title="'404'" :description="t('common.notFound')">
       <template #footer>
-        <NButton
-          type="primary"
-          class="not-found__btn"
-          @click="router.push('/')"
-        >
+        <NButton type="primary" class="not-found__btn" @click="router.push('/')">
           ← {{ t('common.backHome') }}
         </NButton>
       </template>

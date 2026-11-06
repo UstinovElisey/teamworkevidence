@@ -26,9 +26,7 @@ function handleLocaleSelect(key: string) {
 }
 
 const themeIcon = computed(() => (isDark.value ? '☀' : '☾'))
-const themeLabel = computed(() =>
-  isDark.value ? t('theme.light') : t('theme.dark'),
-)
+const themeLabel = computed(() => (isDark.value ? t('theme.light') : t('theme.dark')))
 </script>
 
 <template>
@@ -46,12 +44,7 @@ const themeLabel = computed(() =>
           trigger="click"
           @select="handleLocaleSelect"
         >
-          <NButton
-            quaternary
-            size="small"
-            class="header-btn"
-            :title="t('language.switch')"
-          >
+          <NButton quaternary size="small" class="header-btn" :title="t('language.switch')">
             <span class="header-btn__icon">⊕</span>
             <span class="header-btn__label">{{ currentLocaleLabel }}</span>
           </NButton>
@@ -126,5 +119,24 @@ const themeLabel = computed(() =>
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.04em;
+}
+
+@media (max-width: 767px) {
+  .app-header {
+    height: 52px;
+    padding: 0 14px;
+  }
+
+  .app-header__title {
+    font-size: 14px;
+  }
+
+  .header-btn__label {
+    display: none;
+  }
+
+  .header-btn__icon {
+    margin-right: 0;
+  }
 }
 </style>

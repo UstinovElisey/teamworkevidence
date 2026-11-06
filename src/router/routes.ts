@@ -20,7 +20,7 @@ export const routes: RouteRecordRaw[] = [
       {
         path: 'teams',
         name: 'teams',
-        component: () => import('@/views/HomePage.vue'),
+        component: () => import('@/views/TeamBuilderPage.vue'),
         meta: { title: 'nav.teams' },
       },
       {
