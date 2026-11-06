@@ -1,34 +1,25 @@
 <script setup lang="ts">
-import {
-  NConfigProvider,
-  NGlobalStyle,
-  NMessageProvider,
-  NNotificationProvider,
-} from 'naive-ui'
+import { computed } from 'vue'
+import { NConfigProvider, NMessageProvider, darkTheme } from 'naive-ui'
 import { useTheme } from '@/composables/useTheme'
 
-const { isDark, toggleTheme, naiveTheme } = useTheme()
+const { isDark } = useTheme()
+const theme = computed(() => (isDark.value ? darkTheme : null))
+
+const themeOverrides = computed(() => ({
+  common: {
+    primaryColor: '#0f3d2e',
+    primaryColorHover: '#145239',
+    primaryColorPressed: '#0a2e21',
+    primaryColorSuppl: '#145239',
+  },
+}))
 </script>
 
 <template>
-  <n-config-provider :theme="naiveTheme">
-    <n-global-style />
+  <n-config-provider :theme="theme" :theme-overrides="themeOverrides">
     <n-message-provider>
-      <n-notification-provider>
-        <div
-          class="flex min-h-screen flex-col items-center justify-center gap-4"
-        >
-          <h1 class="text-3xl font-bold">TeamWorkEvidence</h1>
-
-          <!-- Временная кнопка — будет удалена в задаче 3 -->
-          <button
-            class="rounded-md bg-brand-500 px-4 py-2 text-white transition-colors hover:bg-brand-600 dark:bg-brand-400 dark:hover:bg-brand-300"
-            @click="toggleTheme"
-          >
-            {{ isDark ? '☀️ Light' : '🌙 Dark' }}
-          </button>
-        </div>
-      </n-notification-provider>
+      <router-view />
     </n-message-provider>
   </n-config-provider>
 </template>
