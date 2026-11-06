@@ -1,0 +1,34 @@
+{
+  "app": {
+    "name": "TeamWorkEvidence"
+  },
+  "nav": {
+    "dashboard": "Дашборд",
+    "profile": "Профиль",
+    "teams": "Команды",
+    "marketplace": "Маркетплейс",
+    "hackathons": "Хакатоны"
+  },
+  "auth": {
+    "login": "Вход",
+    "register": "Регистрация",
+    "logout": "Выйти"
+  },
+  "common": {
+    "loading": "Загрузка...",
+    "save": "Сохранить",
+    "cancel": "Отмена",
+    "notFound": "Страница не найдена",
+    "backHome": "На главную",
+    "todo": "В разработке"
+  },
+  "theme": {
+    "dark": "Тёмная тема",
+    "light": "Светлая тема"
+  },
+  "language": {
+    "ru": "Русский",
+    "en": "English",
+    "switch": "Язык"
+  }
+}

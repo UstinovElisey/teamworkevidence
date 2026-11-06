@@ -1,0 +1,34 @@
+{
+  "app": {
+    "name": "TeamWorkEvidence"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "teams": "Teams",
+    "marketplace": "Marketplace",
+    "hackathons": "Hackathons"
+  },
+  "auth": {
+    "login": "Sign In",
+    "register": "Sign Up",
+    "logout": "Sign Out"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "notFound": "Page not found",
+    "backHome": "Back to Home",
+    "todo": "Coming soon"
+  },
+  "theme": {
+    "dark": "Dark theme",
+    "light": "Light theme"
+  },
+  "language": {
+    "ru": "Русский",
+    "en": "English",
+    "switch": "Language"
+  }
+}
